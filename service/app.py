@@ -40,12 +40,16 @@ def process_numbers():
     data = request.get_json()
     
     app.logger.info(f'Requst data: {data}')
-    app.logger.info('status: success, data: Числа успешно обработаны')
     
-    result_sum = float(data['area']) * 300000
-    app.logger.info(f'Стоимость квартиры: {result_sum}')
+    if float(data['area']) >= 0:
+        app.logger.info('status: success, data: Числа успешно обработаны')
+        result_sum = float(data['area']) * 300000
+        app.logger.info(f'Стоимость квартиры: {result_sum}')
+        return {'result': result_sum}
+    else:
+        app.logger.info('status: error, data: Отрицательное значение площади')
+        return {'result': 'error'}
     
-    return {'Стоимость квартиры': result_sum}
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=False, port=5050)
