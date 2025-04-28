@@ -41,7 +41,7 @@
 </head>
 <body>
     <div class="form-container">
-        <h2>Введите параметры</h2>
+        <h2>Введите параметры квартиры</h2>
         <form id="numberForm">
             <input type="number" id="num1" placeholder="Площадь квартиры, м2" required>
             <input type="number" id="num2" placeholder="Количество комнат" required>
@@ -75,7 +75,7 @@
             })
             .then(response => response.json())
             .then(data => {
-                document.getElementById('response').innerText = 'Ответ сервера: ' + JSON.stringify(data);
+                document.getElementById('response').innerText = 'Результат расчетов=: ' + JSON.stringify(data);
             })
             .catch(error => {
                 console.error('Ошибка:', error);
