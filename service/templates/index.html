@@ -75,11 +75,17 @@
             })
             .then(response => response.json())
             .then(data => {
-                document.getElementById('response').innerText = 'Результат расчетов=: ' + JSON.stringify(data);
+                if (data.result === 'error'){
+                // Предполагаем, что data содержит числовое значение суммы
+                document.getElementById('response').innerText = `Ошибка`;
+                }
+                else {
+                document.getElementById('response').innerText = `Цена квартиры = ${data.result} рублей`;
+                }
             })
             .catch(error => {
                 console.error('Ошибка:', error);
-                document.getElementById('response').innerText = 'Произошла ошибка при отправке данных';
+                document.getElementById('response').innerText = 'Произошла ошибка при расчете цены квартиры';
             });
         }
     </script>
