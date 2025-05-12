@@ -2,3 +2,4 @@
 data
 service/flask.log
 src/best_model.joblib
+models

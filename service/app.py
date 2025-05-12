@@ -34,18 +34,19 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-model = load('../src/best_model.joblib')
+model = load('../models/best_model.joblib')
 
 # Маршрут для обработки данных формы
 @app.route('/api/numbers', methods=['POST'])
 def process_numbers():
-    # Здесь можно добавить обработку полученных чисел
-    # Для примера просто возвращаем их обратно
     data = request.get_json()
     
     app.logger.info(f'Requst data: {data}')
     
-    if float(data['area']) >= 0:
+    if float(data['total_floors']) < float(data['floor']):
+        app.logger.info('status: error, data: ОНекорректное количество этажей')
+        return {'result': 'error'}
+    elif float(data['area']) >= 0:
         app.logger.info('status: success, data: Числа успешно обработаны')
         
         new_data = pd.DataFrame({
@@ -62,4 +63,11 @@ def process_numbers():
     
 
 if __name__ == '__main__':
+    """Parse arguments and run lifecycle steps"""
+    # parser = argparse.ArgumentParser()
+    # parser.add_argument("-m", "--model", help="Model name", default=MODEL_NAME)
+    # args = parser.parse_args()
+
+    # app.config["model"] = joblib.load(args.model)
+    # app.logger.info(f"Use model: {args.model}")
     app.run(debug=False, port=5050)
