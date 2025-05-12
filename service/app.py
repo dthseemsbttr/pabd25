@@ -2,6 +2,10 @@ from flask import Flask, render_template, request
 from logging.config import dictConfig
 from joblib import dump, load
 import pandas as pd
+import os
+from glob import glob
+from datetime import datetime
+import argparse
 
 dictConfig(
     {
@@ -34,7 +38,19 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-model = load('../models/best_model.joblib')
+models_dir = 'models'
+
+
+model_files = glob(os.path.join(models_dir, '*.joblib'))
+
+def extract_date(filename):
+    date_str = os.path.basename(filename).split('_')[2] + '_' + os.path.basename(filename).split('_')[3].split('.')[0]
+    return datetime.strptime(date_str, '%Y-%m-%d_%H-%M')
+
+sorted_files = sorted(model_files, key=extract_date)
+MODEL_NAME = sorted_files[-1] if sorted_files else None
+# model = load(latest_model)
+#model = load('../models/best_model.joblib')
 
 # Маршрут для обработки данных формы
 @app.route('/api/numbers', methods=['POST'])
@@ -64,10 +80,12 @@ def process_numbers():
 
 if __name__ == '__main__':
     """Parse arguments and run lifecycle steps"""
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument("-m", "--model", help="Model name", default=MODEL_NAME)
-    # args = parser.parse_args()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-m", "--model", help="Model name", default=MODEL_NAME)
+    args = parser.parse_args()
+    print(args.model, MODEL_NAME)
 
     # app.config["model"] = joblib.load(args.model)
-    # app.logger.info(f"Use model: {args.model}")
+    model = load(args.model)
+    app.logger.info(f"Use model: {args.model}")
     app.run(debug=False, port=5050)

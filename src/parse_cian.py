@@ -9,12 +9,11 @@ import pandas as pd
 moscow_parser = cianparser.CianParser(location="Москва")
 
 
-def main():
+def parse(n_rooms=1, end_page=2):
     """
     Function docstring
     """
     t = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M")
-    n_rooms = 4
     csv_path = f'data/raw/{n_rooms}_{t}.csv'
     data = moscow_parser.get_flats(
         deal_type="sale",
@@ -22,7 +21,7 @@ def main():
         with_saving_csv=False,
         additional_settings={
             "start_page": 1,
-            "end_page": 50,
+            "end_page": end_page,
             "object_type": "secondary"
         })
     df = pd.DataFrame(data)
