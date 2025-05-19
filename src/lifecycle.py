@@ -109,9 +109,11 @@ if __name__ == "__main__":
         default=TRAIN_SIZE,
     )
     parser.add_argument("-m", "--model", help="Model name", default=MODEL_NAME)
+    parser.add_argument("-d", "--download_new", help="True or False", default=False, action=argparse.BooleanOptionalAction)
     args = parser.parse_args()
 
-    # parse_cian()
-    # preprocess_data()
+    if args.download_new:
+        parse_cian()
+        preprocess_data()
     path = train_model()
     test_model(path)
