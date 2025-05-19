@@ -19,11 +19,21 @@ import os
 from joblib import dump
 from lightgbm import LGBMRegressor
 from parse_cian import parse
+import logging
 import warnings
+
 warnings.filterwarnings("ignore")
 
 TRAIN_SIZE = 0.2
 MODEL_NAME = "best_model_2025-05-19_20-08.joblib"
+
+logging.basicConfig(
+    filename="model_training.log",
+    filemode="a",
+    format="%(asctime)s,%(msecs)03d %(name)s %(levelname)s %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+    level=logging.DEBUG,
+)
 
 
 def parse_cian():
@@ -97,6 +107,7 @@ def train_model():
     model.fit(X_train, y_train)
     t = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M")
     dump(model, f"models/best_model_{t}.joblib")
+    logging.info(f"Train {model} and save to models/best_model_{t}.joblib")
     return f"models/best_model_{t}.joblib"
 
 
@@ -116,10 +127,10 @@ def test_model(model_path):
     mae = mean_absolute_error(y_test, predict)
     r2 = r2_score(y_test, predict)
 
-    print(f"MSE = {mse:.4f}")
-    print(f"RMSE = {rmse:.4f}")
-    print(f"MAE = {mae:.4f}")
-    print(f"R² = {r2:.4f}")
+    logging.info(f"MSE = {mse:.4f}")
+    logging.info(f"RMSE = {rmse:.4f}")
+    logging.info(f"MAE = {mae:.4f}")
+    logging.info(f"R² = {r2:.4f}")
 
 
 if __name__ == "__main__":
