@@ -74,7 +74,7 @@ def preprocess_data():
         combined_df = combined_df.sort_values("url_id", ascending=False)
         combined_df = combined_df.drop_duplicates(subset="url_id")
         combined_df = combined_df.drop(columns=["url_id"])
-        combined_df = combined_df.head(1000)
+        combined_df = combined_df.head(1500)
         output_filename = f"data/raw/{prefix}_combined_sorted.csv"
         combined_df.to_csv(output_filename, index=False)
 
