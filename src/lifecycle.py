@@ -8,9 +8,10 @@ from collections import defaultdict
 import re
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from joblib import dump, load
 import datetime
+import numpy as np
 
 TRAIN_SIZE = 0.2
 MODEL_NAME = "linear_regression_v2.pkl"
@@ -78,13 +79,14 @@ def train_model():
     df = pd.read_csv("data/processed/df.csv", index_col=0)
     y = df["price"]
     X = df.drop(columns="price")
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=1-TRAIN_SIZE, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=1 - TRAIN_SIZE, random_state=42
+    )
     model = LinearRegression()
     model.fit(X_train, y_train)
     t = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M")
     dump(model, f"models/best_model_{t}.joblib")
     return f"models/best_model_{t}.joblib"
-    
 
 
 def test_model(model_path):
@@ -92,10 +94,21 @@ def test_model(model_path):
     df = pd.read_csv("data/processed/df.csv", index_col=0)
     y = df["price"]
     X = df.drop(columns="price")
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=1-TRAIN_SIZE, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=1 - TRAIN_SIZE, random_state=42
+    )
     model = load(model_path)
     predict = model.predict(X_test)
-    print(f'MSE = {mean_squared_error(predict, y_test)}')
+
+    mse = mean_squared_error(y_test, predict)
+    rmse = np.sqrt(mse)
+    mae = mean_absolute_error(y_test, predict)  
+    r2 = r2_score(y_test, predict)
+
+    print(f"MSE = {mse:.4f}")
+    print(f"RMSE = {rmse:.4f}")
+    print(f"MAE = {mae:.4f}")
+    print(f"R² = {r2:.4f}")
 
 
 if __name__ == "__main__":
@@ -109,7 +122,13 @@ if __name__ == "__main__":
         default=TRAIN_SIZE,
     )
     parser.add_argument("-m", "--model", help="Model name", default=MODEL_NAME)
-    parser.add_argument("-d", "--download_new", help="True or False", default=False, action=argparse.BooleanOptionalAction)
+    parser.add_argument(
+        "-d",
+        "--download_new",
+        help="True or False",
+        default=False,
+        action=argparse.BooleanOptionalAction,
+    )
     args = parser.parse_args()
 
     if args.download_new:
