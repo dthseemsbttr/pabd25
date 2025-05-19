@@ -3,11 +3,9 @@
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
-from sklearn.model_selection import GridSearchCV
 from sklearn.preprocessing import StandardScaler, RobustScaler
 from sklearn.linear_model import LinearRegression
 from sklearn.neighbors import KNeighborsRegressor
-from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 from sklearn.pipeline import Pipeline
 from collections import defaultdict
 from joblib import dump, load
@@ -19,9 +17,13 @@ import numpy as np
 import re
 import os
 from joblib import dump
+from lightgbm import LGBMRegressor
+from parse_cian import parse
+import warnings
+warnings.filterwarnings("ignore")
 
 TRAIN_SIZE = 0.2
-MODEL_NAME = "linear_regression_v2.pkl"
+MODEL_NAME = "best_model_2025-05-19_20-08.joblib"
 
 
 def parse_cian():
@@ -90,12 +92,7 @@ def train_model():
         X, y, test_size=1 - TRAIN_SIZE, random_state=42
     )
 
-    model = Pipeline(
-        [
-            ("scaler", RobustScaler()),
-            ("model", GradientBoostingRegressor(random_state=42)),
-        ]
-    )
+    model = LGBMRegressor(random_state=42)
 
     model.fit(X_train, y_train)
     t = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M")
