@@ -127,7 +127,6 @@ def test_model(model_path):
     mae = mean_absolute_error(y_test, predict)
     r2 = r2_score(y_test, predict)
 
-    logging.info(f"MSE = {mse:.4f}")
     logging.info(f"RMSE = {rmse:.4f}")
     logging.info(f"MAE = {mae:.4f}")
     logging.info(f"R² = {r2:.4f}")
