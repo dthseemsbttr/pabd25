@@ -1,17 +1,24 @@
 """This is full life cycle for ml model"""
 
-import argparse
-from parse_cian import parse
-import pandas as pd
-import os
-from collections import defaultdict
-import re
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
+from sklearn.model_selection import GridSearchCV
+from sklearn.preprocessing import StandardScaler, RobustScaler
 from sklearn.linear_model import LinearRegression
+from sklearn.neighbors import KNeighborsRegressor
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+from sklearn.pipeline import Pipeline
+from collections import defaultdict
 from joblib import dump, load
+from sklearn.svm import SVR
 import datetime
+import argparse
+import pandas as pd
 import numpy as np
+import re
+import os
+from joblib import dump
 
 TRAIN_SIZE = 0.2
 MODEL_NAME = "linear_regression_v2.pkl"
@@ -82,7 +89,14 @@ def train_model():
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=1 - TRAIN_SIZE, random_state=42
     )
-    model = LinearRegression()
+
+    model = Pipeline(
+        [
+            ("scaler", RobustScaler()),
+            ("model", GradientBoostingRegressor(random_state=42)),
+        ]
+    )
+
     model.fit(X_train, y_train)
     t = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M")
     dump(model, f"models/best_model_{t}.joblib")
@@ -102,7 +116,7 @@ def test_model(model_path):
 
     mse = mean_squared_error(y_test, predict)
     rmse = np.sqrt(mse)
-    mae = mean_absolute_error(y_test, predict)  
+    mae = mean_absolute_error(y_test, predict)
     r2 = r2_score(y_test, predict)
 
     print(f"MSE = {mse:.4f}")
