@@ -5,3 +5,4 @@ src/best_model.joblib
 models
 flask.log
 *.pyc
+model_training.log
