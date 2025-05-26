@@ -1,5 +1,6 @@
 .venv
-data
+data/raw
+data/processed
 service/flask.log
 src/best_model.joblib
 models
