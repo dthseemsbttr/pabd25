@@ -1,0 +1,24 @@
+stages:
+  preprocess:
+    cmd: python3 src/preprocess.py
+    deps:
+    - data/raw/
+    - src/preprocess.py
+    outs:
+    - data/processed/df.csv
+  train:
+    cmd: python3 src/train.py
+    deps:
+    - data/processed/df.csv
+    - src/train.py
+    outs:
+    - models/tmp.joblib
+  test:
+    cmd: python3 src/test.py
+    deps:
+    - data/processed/df.csv
+    - src/test.py
+    - models/tmp.joblib
+
+    
+

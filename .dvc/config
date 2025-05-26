@@ -1,4 +1,5 @@
 [core]
-    remote = local
-['remote "local"']
-    url = /home/usr/Документы/dvc-backup    
+    remote = storage
+['remote "storage"']
+    url = s3://pabd25/vvkorotkova
+    endpointurl = https://storage.yandexcloud.net
