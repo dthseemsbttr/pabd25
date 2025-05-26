@@ -1,0 +1,50 @@
+schema: '2.0'
+stages:
+  preprocess:
+    cmd: python3 src/preprocess.py
+    deps:
+    - path: data/raw/
+      hash: md5
+      md5: 84882d27b06167b3b1d7c011839ed5a0.dir
+      size: 5227129
+      nfiles: 38
+    - path: src/preprocess.py
+      hash: md5
+      md5: 8791e9a2af99e426fbc2f0e3c82dc259
+      size: 1444
+    outs:
+    - path: data/processed/df.csv
+      hash: md5
+      md5: 2da69a8393bd5292c828a4fe1723f096
+      size: 34656
+  train:
+    cmd: python3 src/train.py
+    deps:
+    - path: data/processed/df.csv
+      hash: md5
+      md5: 2da69a8393bd5292c828a4fe1723f096
+      size: 34656
+    - path: src/train.py
+      hash: md5
+      md5: a579f847e882ee13cfdc94c7c299e7a7
+      size: 736
+    outs:
+    - path: models/tmp.joblib
+      hash: md5
+      md5: c3e2b14dbc74a8fe90ed12a6ca553590
+      size: 1064
+  test:
+    cmd: python3 src/test.py
+    deps:
+    - path: data/processed/df.csv
+      hash: md5
+      md5: 2da69a8393bd5292c828a4fe1723f096
+      size: 34656
+    - path: models/tmp.joblib
+      hash: md5
+      md5: c3e2b14dbc74a8fe90ed12a6ca553590
+      size: 1064
+    - path: src/test.py
+      hash: md5
+      md5: fdab4c2fadb4ed46a7488049a3a10dde
+      size: 941
