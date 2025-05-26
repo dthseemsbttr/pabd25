@@ -7,6 +7,7 @@ from sklearn.preprocessing import StandardScaler, RobustScaler
 from sklearn.linear_model import LinearRegression
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.pipeline import Pipeline
+from catboost import CatBoostRegressor
 from collections import defaultdict
 from joblib import dump, load
 from sklearn.svm import SVR
@@ -24,7 +25,7 @@ import warnings
 
 warnings.filterwarnings("ignore")
 
-TRAIN_SIZE = 0.2
+TRAIN_SIZE = 0.8
 MODEL_NAME = "best_model_2025-05-19_20-08.joblib"
 
 logging.basicConfig(
@@ -84,8 +85,8 @@ def preprocess_data():
     df_4room = pd.read_csv("data/raw/4_combined_sorted.csv")
 
     df = pd.concat([df_1room, df_2room, df_3room, df_4room], ignore_index=True)
-    df = df[df["total_meters"] <= 100]
-    df = df[df["price"] <= 50000000]
+    df = df[df["total_meters"] <= 90]
+    df = df[df["price"] <= 55000000]
     df = df[df["rooms_count"] != -1]
     columns_to_keep = ["rooms_count", "floor", "floors_count", "total_meters", "price"]
     df = df[columns_to_keep]
@@ -102,7 +103,7 @@ def train_model():
         X, y, test_size=1 - TRAIN_SIZE, random_state=42
     )
 
-    model = LGBMRegressor(random_state=42)
+    model = LinearRegression()
 
     model.fit(X_train, y_train)
     t = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M")
@@ -154,6 +155,6 @@ if __name__ == "__main__":
 
     if args.download_new:
         parse_cian()
-        preprocess_data()
+    preprocess_data()
     path = train_model()
     test_model(path)
