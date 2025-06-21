@@ -35,7 +35,19 @@ dictConfig(
 
 app = Flask(__name__)
 
+auth = HTTPTokenAuth(scheme='Bearer')
 CORS(app, resources={r"/api/numbers": {"origins": "*"}})
+
+TOKENS = {
+    "secret-token-123": "user1",
+    "another-secret-token": "user2"
+}
+
+@auth.verify_token
+def verify_token(token):
+    if token in TOKENS:
+        return TOKENS[token]
+    return False
 
 # Маршрут для отображения формы
 @app.route("/")
@@ -83,6 +95,7 @@ def format_price(price):
 
 # Маршрут для обработки данных формы
 @app.route("/api/numbers", methods=["POST"])
+@auth.login_required
 def process_numbers():
     data = request.get_json()
 
