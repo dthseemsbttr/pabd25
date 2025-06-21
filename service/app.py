@@ -1,11 +1,13 @@
 from flask import Flask, render_template, request
 from logging.config import dictConfig
 from joblib import dump, load
+from flask_cors import CORS 
 import pandas as pd
 import os
 from glob import glob
 from datetime import datetime
 import argparse
+from flask_httpauth import HTTPTokenAuth
 
 dictConfig(
     {
@@ -33,6 +35,7 @@ dictConfig(
 
 app = Flask(__name__)
 
+CORS(app, resources={r"/api/numbers": {"origins": "*"}})
 
 # Маршрут для отображения формы
 @app.route("/")
