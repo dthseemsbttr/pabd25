@@ -1,0 +1,20 @@
+services:
+  flask:
+    image: flask
+    build:
+      context: .
+      dockerfile: ./Dockerfile.flask
+    ports:
+      - 5050:5050
+    container_name: flask
+    restart: unless-stopped
+    healthcheck:
+      test: python -c 'import urllib.request; urllib.request.urlopen("http://flask:5050").getcode() == 200'
+      interval: 10s
+      start_period: 30s
+    logging:
+      options:
+        max-size: 100mb
+        max-file: 2
+    volumes:
+      - /storage/pabd25/pabd25/models:/app/models

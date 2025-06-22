@@ -5,3 +5,6 @@ jupyter
 scikit-learn
 matplotlib
 black
+gunicorn
+flask_httpauth
+flask_cors

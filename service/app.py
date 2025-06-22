@@ -125,14 +125,14 @@ def process_numbers():
         return {"result": "error"}
 
 
-if __name__ == "__main__":
-    """Parse arguments and run lifecycle steps"""
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-m", "--model", help="Model name", default=MODEL_NAME)
-    args = parser.parse_args()
-    print(args.model, MODEL_NAME)
+# if __name__ == "__main__":
+"""Parse arguments and run lifecycle steps"""
+# parser = argparse.ArgumentParser()
+# parser.add_argument("-m", "--model", help="Model name", default=MODEL_NAME)
+# args = parser.parse_args()
+# print(args.model, MODEL_NAME)
 
-    # app.config["model"] = joblib.load(args.model)
-    model = load(args.model)
-    app.logger.info(f"Use model: {args.model}")
-    app.run(debug=False, port=5050)
+# app.config["model"] = joblib.load(args.model)
+model = load(MODEL_NAME)
+app.logger.info(f"Use model: {MODEL_NAME}")
+# app.run(debug=False, port=5050)
