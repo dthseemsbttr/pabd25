@@ -7,3 +7,4 @@ models
 flask.log
 *.pyc
 model_training.log
+*.env

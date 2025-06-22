@@ -9,5 +9,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY ./src/ ./src/ 
 COPY ./service/ ./service/ 
+COPY .env .
+
+RUN python src/download_from_s3.py
 
 CMD ["gunicorn", "-b", ":5050", "service.app:app"]

@@ -8,3 +8,5 @@ black
 gunicorn
 flask_httpauth
 flask_cors
+dotenv
+boto3
